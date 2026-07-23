@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="refresh" content="3600" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="style.css" rel="stylesheet" />
+  <link href="jquery.gcal_flow.css" rel="stylesheet" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script>
+    _gCalFlow_debug = true;
+  </script>
+  <script type="text/javascript" src="jquery.gcal_flow.js"></script>
+  <script type="text/javascript">
+    var $ = jQuery;
+    $(function () {
+      $("#gcf-design").gCalFlow({
+        calid: "nkir1ubm659lpisvts8l4ko06nigi85j@import.calendar.google.com",
+        maxitem: 10,
+      });
+    });
+  </script>
+  <title>BOE</title>
+</head>
+
+<body>
+  <script src="main.js" type="text/javascript"></script>
+  <div>
+    <div class="template">
+      <div class="content-box">
+        <iframe
+          src="https://docs.google.com/presentation/d/e/2PACX-1vR_JjQwPKkTwizO3UW5osxxI5ujEVrihEIpVyPIbLi5XQhNqkazmznUHR9vptnLhxU4G5jOSBg52KLY/embed?start=true&loop=true&delayms=20000"
+          frameborder="0" width="1300" height="840" allowfullscreen="true" mozallowfullscreen="true"
+          webkitallowfullscreen="true"></iframe>
+      </div>
+      <div class="bottom-box"></div>
+    </div>
+  </div>
+  <div class="weather">
+    <a class="weatherwidget-io" href="https://forecast7.com/en/39d76n84d19/dayton/?unit=us" data-label_1="DAYTON, OH"
+      data-label_2="WEATHER" data-days="3" data-theme="original" data-scale="1.5">DAYTON, OH WEATHER</a>
+  </div>
+  <div id="clock">
+    <h1 id="date-time"></h1>
+  </div>
+  <script>
+    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = 'https://weatherwidget.io/js/widget.min.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'weatherwidget-io-js');
+  </script>
+  <div id="gcf-design"></div>
+</body>
+
+</html>
