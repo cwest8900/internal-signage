@@ -58,12 +58,16 @@
   };
 
   gCalFlow = (function () {
-    gCalFlow.demo_apikey = "AIzaSyD0vtTUjLXzH4oKCzNRDymL6E3jKBympf0";
+    gCalFlow.demo_apikey =
+      (typeof window !== "undefined" &&
+        window.APP_CONFIG &&
+        window.APP_CONFIG.googleApiKey) ||
+      null;
 
     gCalFlow.prototype.target = null;
 
     gCalFlow.prototype.template = $(
-      '<div class="gCalFlow">\n  <div class="gcf-header-block">\n    <div class="gcf-title-block">\n      <span class="gcf-title"></span>\n    </div>\n  </div>\n  <div class="gcf-item-container-block">\n    <div class="gcf-item-block">\n      <div class="gcf-item-header-block">\n        <div class="gcf-item-date-block">\n          [<span class="gcf-item-daterange"></span>]\n        </div>\n        <div class="gcf-item-title-block">\n          <strong class="gcf-item-title"></strong>\n        </div>\n      </div>\n      <div class="gcf-item-body-block">\n        <div class="gcf-item-description">\n        </div>\n        <div class="gcf-item-location">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class="gcf-last-update-block">\n    LastUpdate: <span class="gcf-last-update"></span>\n  </div>\n</div>'
+      '<div class="gCalFlow">\n  <div class="gcf-header-block">\n    <div class="gcf-title-block">\n      <span class="gcf-title"></span>\n    </div>\n  </div>\n  <div class="gcf-item-container-block">\n    <div class="gcf-item-block">\n      <div class="gcf-item-header-block">\n        <div class="gcf-item-date-block">\n          [<span class="gcf-item-daterange"></span>]\n        </div>\n        <div class="gcf-item-title-block">\n          <strong class="gcf-item-title"></strong>\n        </div>\n      </div>\n      <div class="gcf-item-body-block">\n        <div class="gcf-item-description">\n        </div>\n        <div class="gcf-item-location">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class="gcf-last-update-block">\n    LastUpdate: <span class="gcf-last-update"></span>\n  </div>\n</div>',
     );
 
     gCalFlow.prototype.opts = {
@@ -222,10 +226,10 @@
       var now;
       if (!this.opts.calid && !this.opts.data_url) {
         log.error(
-          "Option calid and data_url are missing. Abort URL generation"
+          "Option calid and data_url are missing. Abort URL generation",
         );
         this.target.text(
-          "Error: You need to set 'calid' or 'data_url' option."
+          "Error: You need to set 'calid' or 'data_url' option.",
         );
         throw "gCalFlow: calid and data_url missing";
       }
@@ -262,13 +266,13 @@
 
     gCalFlow.prototype.fetch = function () {
       var success_handler;
-      log.debug("Starting ajax call for " + this.gcal_url());
-      if (this.opts.apikey === this.constructor.demo_apikey) {
-        log.warn(
-          "You are using built-in demo API key! This key is provided for tiny use or demo only. Your access may be limited."
+      if (!this.opts.apikey) {
+        log.error(
+          "gCalFlow: Missing Google API key. Set window.APP_CONFIG.googleApiKey.",
         );
-        log.warn("Please check document and consider to use your own key.");
+        return;
       }
+      log.debug("Starting ajax call for " + this.gcal_url());
       success_handler = (function (_this) {
         return function (data) {
           log.debug("Ajax call success. Response data:", data);
@@ -278,8 +282,15 @@
       return $.ajax({
         type: "GET",
         success: success_handler,
+        error: function (jqXHR, textStatus, errorThrown) {
+          log.error("gCalFlow AJAX error:", textStatus, errorThrown);
+          if (jqXHR && jqXHR.responseText) {
+            log.error("gCalFlow response:", jqXHR.responseText);
+          }
+        },
         dataType: "jsonp",
         url: this.gcal_url(),
+        timeout: 20000,
       });
     };
 
@@ -292,7 +303,7 @@
           parseInt(m[3], 10),
           0,
           0,
-          0
+          0,
         );
       }
       offset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -300,7 +311,7 @@
       hour = min = sec = 0;
       if (
         (m = dstr.match(
-          /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/
+          /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/,
         ))
       ) {
         year = parseInt(m[1], 10);
@@ -326,7 +337,7 @@
       }
       log.debug("time parse (gap to local): " + offset);
       ret = new Date(
-        new Date(year, mon - 1, day, hour, min, sec).getTime() - offset
+        new Date(year, mon - 1, day, hour, min, sec).getTime() - offset,
       );
       log.debug("time parse: " + dstr + " -> ", ret);
       return ret;
@@ -367,7 +378,7 @@
               target: this.opts.link_target,
               href: titlelink,
             })
-            .text(data.summary)
+            .text(data.summary),
         );
       } else {
         t.find(".gcf-title").text(data.summary);
@@ -377,7 +388,7 @@
         href: titlelink,
       });
       t.find(".gcf-last-update").html(
-        this.opts.date_formatter(this.parse_date(data.updated))
+        this.opts.date_formatter(this.parse_date(data.updated)),
       );
       it = t.find(".gcf-item-block");
       it.detach();
@@ -417,11 +428,11 @@
             etf = this.opts.date_formatter(ed, et.indexOf(":") < 0);
             ci.find(".gcf-item-end-date").html(etf);
             ci.find(".gcf-item-daterange").html(
-              this.opts.daterange_formatter(sd, ed, st.indexOf(":") < 0)
+              this.opts.daterange_formatter(sd, ed, st.indexOf(":") < 0),
             );
           }
           ci.find(".gcf-item-update-date").html(
-            this.opts.date_formatter(this.parse_date(ent.updated), false)
+            this.opts.date_formatter(this.parse_date(ent.updated), false),
           );
           link = $("<a />").attr({
             target: this.opts.link_target,
@@ -434,7 +445,7 @@
           }
           if (this.opts.link_item_description) {
             ci.find(".gcf-item-description").html(
-              link.clone()[desc_body_method](ent.description)
+              link.clone()[desc_body_method](ent.description),
             );
           } else {
             ci.find(".gcf-item-description")[desc_body_method](ent.description);
@@ -458,7 +469,7 @@
         }
       } else {
         items = $('<div class="gcf-no-items"></div>').html(
-          this.opts.no_items_html
+          this.opts.no_items_html,
         );
       }
       log.debug("formatted item entry array:", items);
@@ -492,7 +503,7 @@
         log.debug("current scroll position:", scroll_container.scrollTop());
         log.debug(
           "scroll capacity:",
-          scroll_container[0].scrollHeight - scroll_container[0].clientHeight
+          scroll_container[0].scrollHeight - scroll_container[0].clientHeight,
         );
         if (
           typeof scroll_children[state.idx] === "undefined" ||
@@ -565,7 +576,7 @@
       return this.each(function () {
         return methods[method].apply(
           $(this),
-          Array.prototype.slice.call(orig_args, 1)
+          Array.prototype.slice.call(orig_args, 1),
         );
       });
     } else if (method === "version") {

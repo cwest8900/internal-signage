@@ -9,18 +9,10 @@
   <link href="style.css" rel="stylesheet" />
   <link href="jquery.gcal_flow.css" rel="stylesheet" type="text/css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="../config.js"></script>
+  <script type="text/javascript" src="jquery.gcal_flow.js"></script>
   <script>
     _gCalFlow_debug = true;
-  </script>
-  <script type="text/javascript" src="jquery.gcal_flow.js"></script>
-  <script type="text/javascript">
-    var $ = jQuery;
-    $(function () {
-      $("#gcf-design").gCalFlow({
-        calid: "c_4e2c2501774b2e4caa8d8475a81e7a991a0d6ef90a3113c9d374f4591e64a9ba@group.calendar.google.com",
-        maxitem: 10,
-      });
-    });
   </script>
   <title>BOE</title>
 </head>
@@ -49,6 +41,17 @@
     !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = 'https://weatherwidget.io/js/widget.min.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'weatherwidget-io-js');
   </script>
   <div id="gcf-design"></div>
+  <script type="text/javascript">
+    var $ = jQuery;
+    $(function () {
+      $("#gcf-design").gCalFlow({
+        calid: "c_4e2c2501774b2e4caa8d8475a81e7a991a0d6ef90a3113c9d374f4591e64a9ba@group.calendar.google.com",
+        maxitem: 10,
+        auto_scroll: true,
+        scroll_interval: 8000,
+      });
+    });
+  </script>
 </body>
 
 </html>
