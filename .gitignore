@@ -1,2 +1,2 @@
 # Ignore local configuration files containing secrets
-config.js
+# config.js
