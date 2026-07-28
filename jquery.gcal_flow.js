@@ -218,6 +218,16 @@
     gCalFlow.prototype.update_opts = function (new_opts) {
       log.debug("update_opts was called");
       log.debug("old options:", this.opts);
+      if (new_opts == null) {
+        new_opts = {};
+      }
+      if (!new_opts.apikey) {
+        new_opts.apikey =
+          (typeof window !== "undefined" &&
+            window.APP_CONFIG &&
+            window.APP_CONFIG.googleApiKey) ||
+          this.opts.apikey;
+      }
       this.opts = $.extend({}, this.opts, new_opts);
       return log.debug("new options:", this.opts);
     };
@@ -538,6 +548,13 @@
       }
       data = this.data("gCalFlow");
       if (!data) {
+        if (!opts.apikey) {
+          opts.apikey =
+            (typeof window !== "undefined" &&
+              window.APP_CONFIG &&
+              window.APP_CONFIG.googleApiKey) ||
+            null;
+        }
         return this.data("gCalFlow", {
           target: this,
           obj: new gCalFlow(this, opts),
