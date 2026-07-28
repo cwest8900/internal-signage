@@ -10,6 +10,12 @@
   <link href="jquery.gcal_flow.css" rel="stylesheet" type="text/css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="./config.js"></script>
+  <script>
+    window.APP_CONFIG = window.APP_CONFIG || {};
+    if (!window.APP_CONFIG.googleApiKey && window.API_KEY) {
+      window.APP_CONFIG.googleApiKey = window.API_KEY;
+    }
+  </script>
   <script type="text/javascript" src="jquery.gcal_flow.js"></script>
   <script>
     _gCalFlow_debug = true;
