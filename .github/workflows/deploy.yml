@@ -22,7 +22,7 @@ jobs:
       # Generates config.js using the secret stored in GitHub
       - name: Generate config.js
         run: |
-          echo "const API_KEY = 'AIzaSyAroetAplGKmB5hCYshnY5a-ha-3PUFLWY';" > config.js
+          echo "const API_KEY = '${{ secrets.CALENDAR_API_KEY }}';" > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
